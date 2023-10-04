@@ -10,7 +10,7 @@ class ChooseMediaForStory extends StatefulWidget {
 }
 
 class _ChooseMediaForStoryState extends State<ChooseMediaForStory> {
-  final AppStoryController storyController = AppStoryController();
+  final AppStoryController storyController = Get.find();
 
   @override
   void initState() {
