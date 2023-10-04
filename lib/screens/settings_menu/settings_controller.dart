@@ -25,6 +25,7 @@ class SettingsController extends GetxController {
 
   var localAuth = LocalAuthentication();
   RxInt bioMetricType = 0.obs;
+
   // RateMyApp rateMyApp = RateMyApp(
   //   preferencesPrefix: 'rateMyApp_',
   //   minDays: 0, // Show rate popup on first day of install.
@@ -49,7 +50,6 @@ class SettingsController extends GetxController {
   }
 
   changeLanguage(Map<String, String> language) async {
-
     var locale = Locale(language['language_code']!);
     Get.updateLocale(locale);
     currentLanguage.value = language['language_code']!;
@@ -95,7 +95,7 @@ class SettingsController extends GetxController {
   getSettings() async {
     String? authKey = await SharedPrefs().getAuthorizationKey();
 
-    if (authKey != null) {
+    // if (authKey != null) {
       await MiscApi.getSettings(resultCallback: (result) {
         setting.value = result;
 
@@ -107,7 +107,7 @@ class SettingsController extends GetxController {
 
         update();
       });
-    }
+    // }
   }
 
   Future checkBiometric() async {
@@ -149,8 +149,7 @@ class SettingsController extends GetxController {
   deleteAccount() {
     AuthApi.deleteAccount(successCallback: () {
       _userProfileManager.logout();
-      AppUtil.showToast(
-          message: accountIsDeletedString.tr, isSuccess: true);
+      AppUtil.showToast(message: accountIsDeletedString.tr, isSuccess: true);
     });
   }
 

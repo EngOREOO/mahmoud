@@ -24,7 +24,7 @@ class HomeController extends GetxController {
   final UserProfileManager _userProfileManager = Get.find();
 
   RxList<PostModel> posts = <PostModel>[].obs;
-  RxList<PollsQuestionModel> polls = <PollsQuestionModel>[].obs;
+  RxList<PollsModel> polls = <PollsModel>[].obs;
   RxList<StoryModel> stories = <StoryModel>[].obs;
   RxList<UserModel> liveUsers = <UserModel>[].obs;
   RxList<GiftModel> timelineGift = <GiftModel>[].obs;
@@ -219,10 +219,9 @@ class HomeController extends GetxController {
   }
 
   void postPollAnswer(
-      int pollId, int pollQuestionId, int questionOptionId) async {
+      int pollId,  int questionOptionId) async {
     MiscApi.postPollAnswer(
         pollId: pollId,
-        pollQuestionId: pollQuestionId,
         questionOptionId: questionOptionId,
         resultCallback: (result) {
           polls.addAll(result);

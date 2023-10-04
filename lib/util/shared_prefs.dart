@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foap/helper/imports/common_import.dart';
 
 class SharedPrefs {
-  //Set/Get UserLoggedIn Status
   void setTutorialSeen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('tutorialSeen', true);
@@ -24,11 +23,6 @@ class SharedPrefs {
     prefs.setBool('darkMode', value);
   }
 
-  void setUserLoggedIn(bool loggedIn) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isLoggedIn', loggedIn);
-  }
-
   void setBioMetricAuthStatus(bool status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('bioMetricAuthStatus', status);
@@ -39,10 +33,6 @@ class SharedPrefs {
     return prefs.getBool('bioMetricAuthStatus') ?? false;
   }
 
-  Future<bool> isUserLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
-  }
 
   //Set/Get UserLoggedIn Status
   Future setAuthorizationKey(String authKey) async {
@@ -86,27 +76,13 @@ class SharedPrefs {
         "assets/chatbg/chatbg3.jpg";
   }
 
-  //Set/Get UserLoggedIn Status
-  // Future<bool> setLanguageCode(String code) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   return await prefs.setString('language', code);
-  // }
-
   Future<String> getLanguageCode() async {
     return 'en';
   }
 
   void clearPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setUserLoggedIn(false);
     prefs.remove('authKey');
-
-    //
-    // prefs.clear();
-    //
-    // if (fcmToken != null) {
-    //   setFCMToken(fcmToken);
-    // }
   }
 
   void setLanguage(String lang) async {

@@ -28,7 +28,7 @@ class AppTextField extends StatelessWidget {
       label: label,
       maxLines: maxLines,
       onChanged: onChanged,
-      backgroundColor: AppColorConstants.inputFieldBackgroundColor,
+      backgroundColor: AppColorConstants.cardColor,
       cornerRadius: 10,
       iconColor: AppColorConstants.iconColor,
     );
@@ -39,9 +39,14 @@ class AppPasswordTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? hintText;
   final ThemeIcon? icon;
+  final ValueChanged<String> onChanged;
 
   const AppPasswordTextField(
-      {Key? key, required this.controller, this.hintText, this.icon})
+      {Key? key,
+      required this.controller,
+      required this.onChanged,
+      this.hintText,
+      this.icon})
       : super(key: key);
 
   @override
@@ -50,10 +55,10 @@ class AppPasswordTextField extends StatelessWidget {
       controller: controller,
       hintText: hintText,
       icon: icon,
-      backgroundColor: AppColorConstants.inputFieldBackgroundColor,
+      backgroundColor: AppColorConstants.cardColor,
       cornerRadius: 10,
       iconColor: AppColorConstants.iconColor,
-      onChanged: (text) {},
+      onChanged: onChanged,
     );
   }
 }
@@ -87,7 +92,7 @@ class AppMobileTextField extends StatelessWidget {
       countryCodeText: countryCodeText,
       countrycodeValueChanged: countryCodeValueChanged,
       label: label,
-      backgroundColor: AppColorConstants.inputFieldBackgroundColor,
+      backgroundColor: AppColorConstants.cardColor,
       textStyle: TextStyle(fontSize: FontSizes.h6),
       cornerRadius: 10,
       onChanged: onChanged,
@@ -122,7 +127,7 @@ class AppDateTextField extends StatelessWidget {
       defaultText: defaultText,
       hintText: hintText,
       label: label,
-      backgroundColor: AppColorConstants.inputFieldBackgroundColor,
+      backgroundColor: AppColorConstants.cardColor,
       textStyle: TextStyle(fontSize: FontSizes.h6),
       cornerRadius: 5,
       onChanged: onChanged,
@@ -162,7 +167,7 @@ class AppDateTimeTextField extends StatelessWidget {
       maxDate: maxDate,
       hintText: hintText,
       label: label,
-      backgroundColor: AppColorConstants.inputFieldBackgroundColor,
+      backgroundColor: AppColorConstants.cardColor,
       textStyle: TextStyle(fontSize: FontSizes.h6),
       cornerRadius: 10,
       onChanged: onChanged,
@@ -200,7 +205,7 @@ class AppPriceTextField extends StatelessWidget {
       currency: currency,
       disable: true,
       label: label,
-      backgroundColor: AppColorConstants.inputFieldBackgroundColor,
+      backgroundColor: AppColorConstants.cardColor,
       textStyle: TextStyle(fontSize: FontSizes.h6),
       cornerRadius: 10,
       onChanged: onChanged,
@@ -236,7 +241,7 @@ class AppDropdownField extends StatelessWidget {
       hintText: hintText,
       label: label,
       value: value,
-      backgroundColor: AppColorConstants.inputFieldBackgroundColor,
+      backgroundColor: AppColorConstants.cardColor,
       textStyle: TextStyle(fontSize: FontSizes.h6),
       cornerRadius: 10,
       onChanged: onChanged,

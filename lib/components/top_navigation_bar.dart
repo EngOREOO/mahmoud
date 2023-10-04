@@ -155,12 +155,15 @@ Widget titleNavigationBarWithIcon(
       bottom: 16);
 }
 
-Widget titleNavigationBar({
-  required String title,
-}) {
-  return BodyLargeText(title.tr, weight: TextWeight.medium).setPadding(
-      left: DesignConstants.horizontalPadding,
-      right: DesignConstants.horizontalPadding,
-      top: 8,
-      bottom: 16);
+Widget titleNavigationBar({required String title}) {
+  return Container(
+    height: 100,
+    width: Get.width,
+    color: AppColorConstants.themeColor.withOpacity(0.1),
+    child: Center(
+      child: BodyLargeText(title.tr, weight: TextWeight.medium)
+          .setPadding(top: 40),
+    ),
+  );
 }
+

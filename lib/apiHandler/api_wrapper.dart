@@ -25,7 +25,9 @@ class ApiResponse {
     model.success = json['status'] == 200;
     model.data = json['data'];
 
-    if (model.success != true && model.data != null  && model.message?.isEmpty == true) {
+    if (model.success != true &&
+        model.data != null &&
+        model.message?.isEmpty == true) {
       var errors = model.data['errors'];
       if (errors != null) {
         var messages = model.data['errors']['message'];
@@ -47,16 +49,33 @@ class ApiResponse {
 class ApiWrapper {
   final JsonDecoder _decoder = const JsonDecoder();
 
+  Future<ApiResponse?> getApiWithoutToken({required String url}) async {
+    String urlString = '${NetworkConstantsUtil.baseUrl}$url';
+
+    return http.get(Uri.parse(urlString)).then((http.Response response) async {
+      dynamic data = _decoder.convert(response.body);
+      EasyLoading.dismiss();
+      log(data.toString());
+      if (data['status'] == 401 && data['data'] == null) {
+        //Get.offAll(() => LoginForExpiredToken());
+      } else {
+        return ApiResponse.fromJson(data);
+      }
+      return null;
+    });
+  }
+
   Future<ApiResponse?> getApi({required String url}) async {
     String? authKey = await SharedPrefs().getAuthorizationKey();
     String urlString = '${NetworkConstantsUtil.baseUrl}$url';
 
+    // print(urlString);
     return http.get(Uri.parse(urlString), headers: {
       "Authorization": "Bearer ${authKey!}"
     }).then((http.Response response) async {
       dynamic data = _decoder.convert(response.body);
       EasyLoading.dismiss();
-      log(data.toString());
+      // log(data.toString());
       if (data['status'] == 401 && data['data'] == null) {
         //Get.offAll(() => LoginForExpiredToken());
       } else {
@@ -73,6 +92,7 @@ class ApiWrapper {
 
     String urlString = '${NetworkConstantsUtil.baseUrl}$url';
 
+    print('param $param');
     return http.post(Uri.parse(urlString), body: jsonEncode(param), headers: {
       "Authorization": "Bearer ${authKey!}",
       'Content-Type': 'application/json'
@@ -80,6 +100,7 @@ class ApiWrapper {
       dynamic data = _decoder.convert(response.body);
 
       // EasyLoading.dismiss();
+      print(data);
       if (data['status'] == 401 && data['data'] == null) {
         // Get.offAll(() => LoginForExpiredToken());
       } else {
@@ -183,6 +204,7 @@ class ApiWrapper {
 
   Future<ApiResponse?> uploadFile(
       {required String file,
+      required GalleryMediaType mediaType,
       required UploadMediaType type,
       required String url}) async {
     EasyLoading.show(status: loadingString.tr);
@@ -192,7 +214,12 @@ class ApiWrapper {
     String? authKey = await SharedPrefs().getAuthorizationKey();
     request.headers.addAll({"Authorization": "Bearer ${authKey!}"});
     request.fields.addAll({'type': uploadMediaTypeId(type).toString()});
-    request.files.add(await http.MultipartFile.fromPath('mediaFile', file));
+    if (mediaType == GalleryMediaType.video) {
+      request.files.add(await http.MultipartFile.fromPath('mediaFile', file,
+          contentType: MediaType('video', 'mp4')));
+    } else {
+      request.files.add(await http.MultipartFile.fromPath('mediaFile', file));
+    }
     var res = await request.send();
     var responseData = await res.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);

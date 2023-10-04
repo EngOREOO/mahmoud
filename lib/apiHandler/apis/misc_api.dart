@@ -21,30 +21,28 @@ class MiscApi {
   }
 
   static getPolls(
-      {required Function(List<PollsQuestionModel>) resultCallback}) {
+      {required Function(List<PollsModel>) resultCallback}) async{
     var url = NetworkConstantsUtil.getPolls;
 
-    EasyLoading.show(status: loadingString.tr);
-    ApiWrapper().getApi(url: url).then((result) {
-      EasyLoading.dismiss();
+    await ApiWrapper().getApi(url: url).then((result) {
       if (result?.success == true) {
-        var items = result!.data['pollQuestion']['items'];
-        resultCallback(List<PollsQuestionModel>.from(
-            items.map((x) => PollsQuestionModel.fromJson(x))));
+        var items = result!.data['poll']['items'];
+        resultCallback(List<PollsModel>.from(
+            items.map((x) => PollsModel.fromJson(x))));
       }
     });
   }
 
   static postPollAnswer(
       {required int pollId,
-      required int pollQuestionId,
-      required int questionOptionId,
-      required Function(List<PollsQuestionModel>) resultCallback}) {
+        // required int pollQuestionId,
+        required int questionOptionId,
+        required Function(List<PollsModel>) resultCallback}) async{
     var url = NetworkConstantsUtil.postPoll;
 
-    ApiWrapper().postApi(url: url, param: {
+    await ApiWrapper().postApi(url: url, param: {
       "poll_id": pollId.toString(),
-      "poll_question_id": pollQuestionId.toString(),
+      // "poll_question_id": pollQuestionId.toString(),
       "question_option_id": questionOptionId.toString(),
     }).then((response) {
       if (response?.success == true) {
@@ -52,8 +50,8 @@ class MiscApi {
         var question = result['question'].first;
         question['pollQuestionOption'] = result['questionOption'];
 
-        resultCallback(List<PollsQuestionModel>.from(
-            [question].map((x) => PollsQuestionModel.fromJson(x))));
+        resultCallback(List<PollsModel>.from(
+            [question].map((x) => PollsModel.fromJson(x))));
       }
     });
   }
@@ -90,7 +88,7 @@ class MiscApi {
   static getSettings({required Function(SettingModel) resultCallback}) async {
     var url = NetworkConstantsUtil.getSettings;
 
-    ApiWrapper().getApi(url: url).then((result) {
+    ApiWrapper().getApiWithoutToken(url: url).then((result) {
       if (result?.success == true) {
         var setting = result!.data['setting'];
         resultCallback(SettingModel.fromJson(setting));
@@ -169,6 +167,7 @@ class MiscApi {
 
   static Future uploadFile(String filePath,
       {required UploadMediaType type,
+      required GalleryMediaType mediaType,
       required Function(String, String) resultCallback}) async {
     EasyLoading.show(status: loadingString.tr);
 
@@ -176,6 +175,7 @@ class MiscApi {
         .uploadFile(
             url: NetworkConstantsUtil.uploadFileImage,
             file: filePath,
+            mediaType: mediaType,
             type: type)
         .then((result) {
       EasyLoading.dismiss();
@@ -186,5 +186,4 @@ class MiscApi {
       }
     });
   }
-
 }

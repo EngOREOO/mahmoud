@@ -34,8 +34,10 @@ class _SinglePostDetailState extends State<SinglePostDetail> {
       backgroundColor: AppColorConstants.backgroundColor,
       body: Column(
         children: [
-          backNavigationBar( title: postString.tr),
-          const SizedBox(height: 8,),
+          backNavigationBar(title: postString.tr),
+          const SizedBox(
+            height: 8,
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -54,12 +56,6 @@ class _SinglePostDetailState extends State<SinglePostDetail> {
                     : singlePostDetailController.isLoading == false
                         ? PostCard(
                             model: singlePostDetailController.post.value!,
-
-                            viewInsightHandler: () {
-                              Get.to(() => ViewPostInsights(
-                                  post:
-                                      singlePostDetailController.post.value!));
-                            },
                             removePostHandler: () {
                               Get.back();
                             },

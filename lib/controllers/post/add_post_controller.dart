@@ -34,7 +34,6 @@ class AddPostController extends GetxController {
 
   int currentUpdateAbleStartOffset = 0;
   int currentUpdateAbleEndOffset = 0;
-  RxBool allowComments = true.obs;
 
   RxString searchText = ''.obs;
   RxInt position = 0.obs;
@@ -48,6 +47,7 @@ class AddPostController extends GetxController {
   int accountsPage = 1;
   bool canLoadMoreAccounts = true;
   bool accountsIsLoading = false;
+  RxBool enableComments = true.obs;
 
   clear() {
     searchText.value = '';
@@ -58,6 +58,7 @@ class AddPostController extends GetxController {
     accountsPage = 1;
     canLoadMoreAccounts = true;
     accountsIsLoading = false;
+    enableComments.value = true;
     update();
   }
 
@@ -68,6 +69,11 @@ class AddPostController extends GetxController {
 
   togglePreviewMode() {
     isPreviewMode.value = !isPreviewMode.value;
+    update();
+  }
+
+  toggleEnableComments() {
+    enableComments.value = !enableComments.value;
     update();
   }
 
@@ -204,10 +210,6 @@ class AddPostController extends GetxController {
     this.position.value = position;
   }
 
-  toggleAllowCommentsSetting() {
-    allowComments.value = !allowComments.value;
-  }
-
   discardFailedPost() {
     postingMedia = [];
     postingTitle = '';
@@ -217,18 +219,20 @@ class AddPostController extends GetxController {
   }
 
   retryPublish() {
-    uploadAllPostFiles(items: postingMedia, title: postingTitle);
+    uploadAllPostFiles(
+        items: postingMedia, title: postingTitle, allowComments: true);
   }
 
   void uploadAllPostFiles(
       {required List<Media> items,
-        required String title,
-        int? competitionId,
-        int? clubId,
-        bool isReel = false,
-        int? audioId,
-        double? audioStartTime,
-        double? audioEndTime}) async {
+      required String title,
+      required bool allowComments,
+      int? competitionId,
+      int? clubId,
+      bool isReel = false,
+      int? audioId,
+      double? audioStartTime,
+      double? audioEndTime}) async {
     postingMedia = items;
     postingTitle = title;
     isPosting.value = true;
@@ -250,6 +254,7 @@ class AddPostController extends GetxController {
     publishAction(
       galleryItems: responses,
       title: title,
+      allowComments: allowComments,
       tags: title.getHashtags(),
       mentions: title.getMentions(),
       competitionId: competitionId,
@@ -288,34 +293,34 @@ class AddPostController extends GetxController {
       file = mediaInfo!.file!;
 
       File videoThumbnail = await File(
-          '${tempDir.path}/${media.id!.replaceAll('/', '')}_thumbnail.png')
+              '${tempDir.path}/${media.id!.replaceAll('/', '')}_thumbnail.png')
           .create();
 
       videoThumbnail.writeAsBytesSync(media.thumbnail!);
 
       await PostApi.uploadFile(videoThumbnail.path,
           resultCallback: (fileName, filePath) async {
-            videoThumbnailPath = fileName;
-            await videoThumbnail.delete();
-          });
+        videoThumbnailPath = fileName;
+        await videoThumbnail.delete();
+      });
     }
 
     // EasyLoading.show(status: loadingString.tr);
     await PostApi.uploadFile(file.path,
         resultCallback: (fileName, filePath) async {
-          String imagePath = fileName;
+      String imagePath = fileName;
 
-          await file.delete();
+      await file.delete();
 
-          gallery = {
-            'filename': imagePath,
-            'video_thumb': videoThumbnailPath ?? '',
-            'type': competitionId == null ? '1' : '2',
-            'media_type': media.mediaType == GalleryMediaType.photo ? '1' : '2',
-            'is_default': '1',
-          };
-          completer.complete(gallery);
-        });
+      gallery = {
+        'filename': imagePath,
+        'video_thumb': videoThumbnailPath ?? '',
+        'type': competitionId == null ? '1' : '2',
+        'media_type': media.mediaType == GalleryMediaType.photo ? '1' : '2',
+        'is_default': '1',
+      };
+      completer.complete(gallery);
+    });
 
     return completer.future;
   }
@@ -325,6 +330,7 @@ class AddPostController extends GetxController {
     required String title,
     required List<String> tags,
     required List<String> mentions,
+    required bool allowComments,
     int? competitionId,
     int? clubId,
     bool isReel = false,
@@ -336,10 +342,11 @@ class AddPostController extends GetxController {
         postType: isReel == true
             ? PostType.reel
             : competitionId != null
-            ? PostType.competition
-            : clubId != null
-            ? PostType.club
-            : PostType.basic,
+                ? PostType.competition
+                : clubId != null
+                    ? PostType.club
+                    : PostType.basic,
+        allowComments: allowComments,
         title: title,
         gallery: galleryItems,
         hashTag: tags.join(','),
@@ -373,123 +380,16 @@ class AddPostController extends GetxController {
         });
   }
 
-// loadMedia(
-//     {required BuildContext context,
-//     required PostMediaType mediaType,
-//     required bool canSelectMultiple}) async {
-//   mediaList.clear();
-//   numberOfItems.value = 0;
-//   // _channel
-//   //     .invokeMethod<int>(
-//   //         "getItemCount",
-//   //         mediaType == PostMediaType.photo
-//   //             ? 1
-//   //             : mediaType == PostMediaType.video
-//   //                 ? 2
-//   //                 : 3)
-//   //     .then((count) {
-//   //   numberOfItems.value = count ?? 0;
-//   // });
-//
-//   getIt<GalleryLoader>().loadGalleryData(
-//       mediaType: mediaType,
-//
-//       completion: (data) {
-//         mediaList.value = data;
-//         numberOfItems.value = mediaList.length;
-//         if (mediaList.isNotEmpty) {
-//           selectItem(index: 0, canSelectMultiple: canSelectMultiple);
-//         }
-//       });
-// }
-
-// Future<GalleryMedia> getItem(
-//     {required int index, required PostMediaType mediaType}) async {
-//   if (itemCache[index] != null) {
-//     return await getCachedItem(index);
-//   } else {
-//     var channelResponse = await _channel.invokeMethod("getItem", {
-//       'index': index,
-//       'mediaType': mediaType == PostMediaType.photo
-//           ? 1
-//           : mediaType == PostMediaType.video
-//               ? 2
-//               : 3
-//     });
-//     var item = Map<String, dynamic>.from(channelResponse);
-//     var galleryImage = GalleryMedia(
-//       bytes: item['data'],
-//       id: item['id'],
-//       dateCreated: item['created'],
-//       mediaType: item['mediaType'] ?? 1,
-//       path: item['path'] ?? '',
-//     );
-//
-//     itemCache[index] = galleryImage;
-//     return galleryImage;
-//   }
-// }
-
-// Future<GalleryMedia> getOriginalItem(String id) async {
-//   if (originalItemCache[id] != null) {
-//     return await getCachedOriginalItem(id);
-//   } else {
-//     var channelResponse =
-//         await _channel.invokeMethod("originalForGalleryItem", id);
-//     var item = Map<String, dynamic>.from(channelResponse);
-//
-//     var galleryImage = GalleryMedia(
-//       bytes: item['data'],
-//       id: item['id'],
-//       dateCreated: item['created'],
-//       mediaType: item['mediaType'],
-//       path: item['path'],
-//     );
-//
-//     originalItemCache[id] = galleryImage;
-//
-//     // update();
-//
-//     return galleryImage;
-//   }
-// }
-
-// getCachedItem(int index) {
-//   return itemCache[index];
-// }
-
-// getCachedOriginalItem(String id) {
-//   return originalItemCache[id];
-// }
-
-// isSelected(String id) {
-//   return selectedItems.where((item) => item.id == id).isNotEmpty;
-// }
-//
-// selectItem({required int index, required bool canSelectMultiple}) async {
-//   if (mediaList.isNotEmpty) {
-//     var galleryImage = mediaList[index];
-//     // var galleryImage = await getOriginalItem(previewAsset.id);
-//
-//     if (canSelectMultiple) {
-//       if (isSelected(galleryImage.id)) {
-//         selectedItems.removeWhere((anItem) => anItem.id == galleryImage.id);
-//         if (selectedItems.isEmpty) {
-//           selectedItems.add(galleryImage);
-//         }
-//       } else {
-//         if (selectedItems.length < 10) {
-//           selectedItems.add(galleryImage);
-//         }
-//       }
-//     } else {
-//       selectedItems.clear();
-//       selectedItems.add(galleryImage);
-//     }
-//     if (currentIndex.value >= selectedItems.length) {
-//       currentIndex.value = selectedItems.length - 1;
-//     }
-//     update();
-//   }
-// }
+  void updatePost({
+    required int postId,
+    required String title,
+    required bool allowComments,
+  }) {
+    PostApi.updatePost(
+      postId: postId,
+      title: title,
+      allowComments: allowComments,
+    );
+    Get.back();
+  }
 }

@@ -117,7 +117,7 @@ class _MentionsState extends State<Mentions> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.position.pixels) {
-        if (!_postController.mentionsPostsIsLoading) {
+        if (!_postController.mentionsDataWrapper.isLoading.value) {
           _postController.getMyMentions();
         }
       }
@@ -128,7 +128,7 @@ class _MentionsState extends State<Mentions> {
         builder: (ctx) {
           List<PostModel> posts = _postController.mentions;
 
-          return _postController.isLoadingPosts
+          return _postController.mentionsDataWrapper.isLoading.value
               ? const HomeScreenShimmer()
               : posts.isEmpty
                   ? Center(child: BodyLargeText(noDataString.tr))
@@ -143,9 +143,6 @@ class _MentionsState extends State<Mentions> {
                           children: [
                             PostCard(
                                 model: model,
-                                viewInsightHandler: () {
-                                  Get.to(() => ViewPostInsights(post: model));
-                                },
                                 removePostHandler: () {
                                   _postController.removePostFromList(model);
                                 },

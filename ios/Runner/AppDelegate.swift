@@ -11,7 +11,7 @@ import GoogleMaps
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        GMSServices.provideAPIKey("AIzaSyA4vcqErGvq5NRbvhvq8JKSp0VFpNBBPjE")
+        GMSServices.provideAPIKey("your_google_map_api_key")
 
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         GeneratedPluginRegistrant.register(with: self)

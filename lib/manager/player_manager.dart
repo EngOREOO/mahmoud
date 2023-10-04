@@ -25,7 +25,7 @@ class PlayerManager extends GetxController {
   Rx<ProgressBarState?> progress = Rx<ProgressBarState?>(null);
   RxBool isPlaying = false.obs;
 
-  playAudio(Audio audio) async {
+  playNetworkAudio(Audio audio) async {
     if (currentlyPlayingAudio.value?.id != audio.id) {
       currentlyPlayingAudio.value = audio;
       await player.setUrl(audio.url);
@@ -36,9 +36,30 @@ class PlayerManager extends GetxController {
     player.play();
   }
 
+  playLocalAudio(Audio audio) async {
+    print('hello');
+
+    if (currentlyPlayingAudio.value?.id != audio.id) {
+      print('hello 1');
+
+      currentlyPlayingAudio.value = audio;
+      print('hello 2');
+
+      await player.setFilePath(audio.url);
+      print('hello 3');
+
+      listenToStates();
+    }
+    isPlaying.value = true;
+    print('hello 4');
+
+    player.play();
+  }
+
   listenToStates() {
     player.positionStream.listen((event) {
       currentPosition = event;
+      print('player.positionStream.listen');
       progress.value =
           ProgressBarState(current: currentPosition, total: totalDuration);
     });
@@ -79,7 +100,7 @@ class PlayerManager extends GetxController {
     isPlaying.value = false;
   }
 
-  updateProgress(Duration currentPosition){
+  updateProgress(Duration currentPosition) {
     // progress.value =
     //     ProgressBarState(current: currentPosition, total: totalDuration);
     player.seek(currentPosition);

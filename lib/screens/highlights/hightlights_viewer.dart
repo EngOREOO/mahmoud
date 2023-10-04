@@ -19,6 +19,8 @@ class _HighlightViewerState extends State<HighlightViewer> {
 
   @override
   void initState() {
+    highlightController.setCurrentHighlight(widget.highlight);
+
     super.initState();
   }
 

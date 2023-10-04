@@ -94,7 +94,7 @@ class MyProfileState extends State<MyProfile>
                     ),
                     SliverPersistentHeader(
                       delegate: _SliverAppBarDelegate(
-                        getTextTabBar(tabs: tabs, controller: controller),
+                        getTextTabBar(tabs: tabs, controller: controller,canScroll: false),
                       ),
                       pinned: true,
                       // floating: true,
@@ -104,7 +104,7 @@ class MyProfileState extends State<MyProfile>
                 body: TabBarView(
                   controller: controller,
                   children: [
-                    PostList(),
+                    PostList(postSource: PostSource.posts,),
                     MentionsList(),
                   ],
                 )),

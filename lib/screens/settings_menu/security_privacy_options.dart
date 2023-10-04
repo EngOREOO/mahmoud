@@ -26,7 +26,6 @@ class _PrivacyOptionsState extends State<PrivacyOptions> {
         children: [
           backNavigationBar(
                title: privacyString.tr),
-          divider().tP8,
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,

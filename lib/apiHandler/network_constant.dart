@@ -82,6 +82,10 @@ class NetworkConstantsUtil {
   static String myStories = 'stories/my-story';
   static String myCurrentActiveStories =
       'stories/my-active-story?expand=userStory';
+  static String viewStory = 'stories/view-counter';
+  static String storyViewedByUsers =
+      'stories/story-view-user?id={{story_id}}&expand=user';
+  static String storyDetail = 'stories/';
   static String deleteStory = 'stories/';
   static String highlights =
       'highlights?expand=highlightStory,highlightStory.story.user&user_id=';
@@ -93,17 +97,24 @@ class NetworkConstantsUtil {
 
   //********************* Post ***********//
   static String addPost = 'posts';
+  static String editPost = 'posts/';
+
   static String uploadPostImage = 'posts/upload-gallary';
   static String uploadFileImage = 'file-uploads/upload-file';
   static String addCompetitionPost = 'posts/competition-image';
   static String searchPost =
-      'posts/search-post?expand=user,user.userLiveDetail,clubDetail.createdByUser,clubDetail.totalJoinedUser';
+      'posts/search-post?expand=user,user.userLiveDetail,clubDetail.createdByUser,clubDetail.totalJoinedUser,originPost.user,isFavorite,originPost,pollDetails,pollDetails.pollOptions';
   static String postDetail =
       'posts/{id}?expand=user,user.userLiveDetail,clubDetail,giftSummary';
   static String mentionedPosts =
       'posts/my-post-mention-user?expand=user&user_id=';
   static String likePost = 'posts/like';
   static String unlikePost = 'posts/unlike';
+  static String postLikedByUsers =
+      'posts/post-like-user-list?post_id={{post_id}}&expand=user';
+  static String savePost = 'favorites/add-favorite';
+  static String removeSavedPost = 'favorites/remove-favorite';
+
 
   static String getComments = 'posts/comment-list';
   static String addComment = 'posts/add-comment';
@@ -129,6 +140,9 @@ class NetworkConstantsUtil {
       'chats/room-detail?room_id={room_id}&expand=createdByUser,chatRoomUser.user,chatRoomUser.user.userLiveDetail';
   static String getChatRooms =
       'chats/room?expand=createdByUser,chatRoomUser,chatRoomUser.user,lastMessage,chatRoomUser.user.userLiveDetail';
+  static String getPublicChatRooms =
+      'chats/open-room?expand=createdByUser,chatRoomUser,chatRoomUser.user,lastMessage,chatRoomUser.user.userLiveDetail';
+
   static String deleteChatRoom = 'chats/delete-room?room_id=';
   static String deleteChatRoomMessages = 'chats/delete-room-chat';
 
@@ -189,8 +203,7 @@ class NetworkConstantsUtil {
 
   //***********Polls***********//
 
-  static String getPolls =
-      'poll-questions?expand=pollQuestionOption&poll_id=&title=';
+  static String getPolls = 'polls?expand=pollOptions&category_id=&title=';
   static String postPoll = 'poll-question-answers/add-answer';
 
   //***********Clubs***********//

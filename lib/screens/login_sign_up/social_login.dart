@@ -209,7 +209,6 @@ class _SocialLoginState extends State<SocialLogin> {
         email: email,
         successCallback: (authKey) async {
           EasyLoading.dismiss();
-          SharedPrefs().setUserLoggedIn(true);
           await SharedPrefs().setAuthorizationKey(authKey);
           await _userProfileManager.refreshProfile();
           await _settingsController.getSettings();

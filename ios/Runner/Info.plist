@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Socialified</string>
+	<string>your_app_name</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Phozio</string>
+	<string>your_app_name</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -38,7 +38,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb518019800216421</string>
+				<string>fb_your_facebook_app_key</string>
 			</array>
 		</dict>
 		<dict>
@@ -55,15 +55,15 @@
 	<key>FDAllFilesDownloadedMessage</key>
 	<string>All files have been downloaded</string>
 	<key>FacebookAppID</key>
-	<string>518019800216421</string>
+	<string>your_facebook_app_key</string>
 	<key>FacebookClientToken</key>
-	<string>3c9b3df9138f5999d7acc01bd9983af3</string>
+	<string>ypur_facebook_app_token</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>FirebaseMessagingAutoInitEnabled</key>
 	<false/>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-1748815945631578~1256886289</string>
+	<string>your_google_admob_app_id</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>twitter</string>

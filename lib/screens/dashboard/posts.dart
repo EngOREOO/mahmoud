@@ -132,7 +132,7 @@ class _PostsState extends State<Posts> {
         builder: (ctx) {
           List<PostModel> posts = _postController.posts;
 
-          return _postController.isLoadingPosts
+          return _postController.postDataWrapper.isLoading.value
               ? const HomeScreenShimmer()
               : posts.isEmpty
                   ? Center(child: BodyLargeText(noDataString.tr))
@@ -147,9 +147,7 @@ class _PostsState extends State<Posts> {
                           children: [
                             PostCard(
                                 model: model,
-                                viewInsightHandler: () {
-                                  Get.to(() => ViewPostInsights(post: model));
-                                },
+
                                 removePostHandler: () {
                                   _postController.removePostFromList(model);
                                 },

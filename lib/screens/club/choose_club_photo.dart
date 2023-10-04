@@ -112,7 +112,7 @@ class ChooseClubCoverPhotoState extends State<ChooseClubCoverPhoto> {
           AppThemeButton(
               text: widget.club.id == null
                   ? createClubString.tr
-                  : updateStrString.tr,
+                  : updateString.tr,
               onPress: () {
                 if (widget.club.id == null) {
                   createBtnClicked();

@@ -11,7 +11,7 @@ enum SearchFrom {
   phone,
 }
 
-enum PostSource { posts, mentions }
+enum PostSource { posts, mentions, videos, saved }
 
 enum PostType { basic, competition, club, reel }
 

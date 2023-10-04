@@ -57,9 +57,7 @@ class HorizontalMenuBarState extends State<HorizontalMenuBar> {
                         : AppColorConstants.cardColor.darken(),
                     child: BodyLargeText(
                       widget.menus[index].tr,
-                      color: index == widget.selectedIndex
-                          ? AppColorConstants.grayscale100
-                          : AppColorConstants.grayscale900,
+                      color: AppColorConstants.grayscale900,
                       weight: index == widget.selectedIndex
                           ? TextWeight.semiBold
                           : TextWeight.medium,

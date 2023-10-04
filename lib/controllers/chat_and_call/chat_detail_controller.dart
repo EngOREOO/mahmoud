@@ -22,7 +22,6 @@ import '../../util/constant_util.dart';
 import '../../util/shared_prefs.dart';
 import 'agora_call_controller.dart';
 
-
 class ChatDetailController extends GetxController {
   final AgoraCallController agoraCallController = Get.find();
   final UserProfileManager _userProfileManager = Get.find();
@@ -294,7 +293,9 @@ class ChatDetailController extends GetxController {
 
   sendMessageAsRead(ChatMessageModel message) {
     messages.value = messages.map((element) {
-      element.status = 3;
+      if (element.id == message.id) {
+        element.status = 3;
+      }
       return element;
     }).toList();
 
@@ -373,8 +374,7 @@ class ChatDetailController extends GetxController {
     final filter = ProfanityFilter();
     bool hasProfanity = filter.hasProfanity(messageText);
     if (hasProfanity) {
-      AppUtil.showToast(
-          message: notAllowedMessageString.tr, isSuccess: true);
+      AppUtil.showToast(message: notAllowedMessageString.tr, isSuccess: true);
       return false;
     }
 
@@ -1225,6 +1225,7 @@ class ChatDetailController extends GetxController {
         if (media.mediaType == GalleryMediaType.photo) {
         } else if (media.mediaType == GalleryMediaType.video) {
           await MiscApi.uploadFile(thumbnailFile!.path,
+              mediaType: GalleryMediaType.photo,
               type: UploadMediaType.chat, resultCallback: (filename, filepath) {
             videoThumbnailPath = filepath;
           });
@@ -1260,8 +1261,9 @@ class ChatDetailController extends GetxController {
           //     media, messageId, false, chatRoom.value!.id);
         }
 
-        await MiscApi.uploadFile(mainFile.path, type: UploadMediaType.chat,
-            resultCallback: (filename, filepath) {
+        await MiscApi.uploadFile(mainFile.path,
+            mediaType: media.mediaType!,
+            type: UploadMediaType.chat, resultCallback: (filename, filepath) {
           String mainFileUploadedPath = filepath;
 
           // await mainFile.delete();
@@ -1287,8 +1289,7 @@ class ChatDetailController extends GetxController {
           callback(uploadedGalleryMedia);
         });
       } else {
-        AppUtil.showToast(
-            message: noInternetString.tr, isSuccess: false);
+        AppUtil.showToast(message: noInternetString.tr, isSuccess: false);
       }
     });
     return gallery;
@@ -1507,8 +1508,8 @@ class ChatDetailController extends GetxController {
 // call
   void initiateVideoCall() {
     PermissionUtils.requestPermission(
-        [Permission.camera, Permission.microphone],
-        isOpenSettings: false, permissionGrant: () async {
+        [Permission.camera, Permission.microphone], isOpenSettings: false,
+        permissionGrant: () async {
       Call call = Call(
           uuid: '',
           callId: 0,

@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:foap/helper/imports/common_import.dart';
+import 'package:foap/screens/post/tag_hashtag_view.dart';
+import 'package:foap/screens/post/tag_users_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../components/hashtag_tile.dart';
 import '../../components/user_card.dart';
@@ -97,6 +99,7 @@ class AddPostState extends State<AddPostScreen> {
                           ).ripple(() {
                             addPostController.uploadAllPostFiles(
                                 isReel: widget.isReel ?? false,
+                                allowComments: addPostController.enableComments.value,
                                 audioId: widget.audioId,
                                 audioStartTime: widget.audioStartTime,
                                 audioEndTime: widget.audioEndTime,
@@ -119,6 +122,25 @@ class AddPostState extends State<AddPostScreen> {
                           Expanded(child: addDescriptionView()),
                         ],
                       ).hp(DesignConstants.horizontalPadding),
+                      Row(
+                        children: [
+                          BodyMediumText(
+                            allowCommentsString.tr,
+                            weight: TextWeight.semiBold,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Obx(() => ThemeIconWidget(
+                              addPostController.enableComments.value
+                                  ? ThemeIcon.selectedCheckbox
+                                  : ThemeIcon.emptyCheckbox)
+                              .ripple(() {
+                            addPostController.toggleEnableComments();
+                          })),
+                        ],
+                      ).hp(DesignConstants.horizontalPadding),
+
                       Obx(() {
                         return addPostController.isEditing.value == 1
                             ? Expanded(
@@ -129,10 +151,10 @@ class AddPostState extends State<AddPostScreen> {
                                 .withOpacity(0.1),
                             child: addPostController
                                 .currentHashtag.isNotEmpty
-                                ? hashTagView()
+                                ? TagHashtagView()
                                 : addPostController
                                 .currentUserTag.isNotEmpty
-                                ? usersView()
+                                ? TagUsersView()
                                 : Container(),
                           ),
                         )
@@ -259,67 +281,4 @@ class AddPostState extends State<AddPostScreen> {
     );
   }
 
-  usersView() {
-    return GetBuilder<AddPostController>(
-        init: addPostController,
-        builder: (ctx) {
-          return ListView.separated(
-              padding: EdgeInsets.only(top:20,left: DesignConstants.horizontalPadding, right: DesignConstants.horizontalPadding),
-              itemCount: addPostController.searchedUsers.length,
-              itemBuilder: (BuildContext ctx, int index) {
-                return UserTile(
-                  profile: addPostController.searchedUsers[index],
-                  viewCallback: () {
-                    addPostController.addUserTag(
-                        addPostController.searchedUsers[index].userName);
-                  },
-                );
-              },
-              separatorBuilder: (BuildContext ctx, int index) {
-                return const SizedBox(
-                  height: 20,
-                );
-              }).addPullToRefresh(
-              refreshController: _usersRefreshController,
-              onRefresh: () {},
-              onLoading: () {
-                addPostController.searchUsers(
-                    text: addPostController.currentUserTag.value,callBackHandler: (){
-                  _usersRefreshController.loadComplete();
-                });
-              },
-              enablePullUp: true,
-              enablePullDown: false);
-        });
-  }
-
-  hashTagView() {
-    return GetBuilder<AddPostController>(
-        init: addPostController,
-        builder: (ctx) {
-          return ListView.builder(
-            padding:  EdgeInsets.only(left: DesignConstants.horizontalPadding, right: DesignConstants.horizontalPadding),
-            itemCount: addPostController.hashTags.length,
-            itemBuilder: (BuildContext ctx, int index) {
-              return HashTagTile(
-                hashtag: addPostController.hashTags[index],
-                onItemCallback: () {
-                  addPostController
-                      .addHashTag(addPostController.hashTags[index].name);
-                },
-              );
-            },
-          ).addPullToRefresh(
-              refreshController: _hashtagRefreshController,
-              onRefresh: () {},
-              onLoading: () {
-                addPostController.searchHashTags(
-                    text: addPostController.currentHashtag.value,callBackHandler: (){
-                  _hashtagRefreshController.loadComplete();
-                });
-              },
-              enablePullUp: true,
-              enablePullDown: false);
-        });
-  }
 }

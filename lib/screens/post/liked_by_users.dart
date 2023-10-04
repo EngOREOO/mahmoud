@@ -84,7 +84,6 @@ class LikedByUsersState extends State<LikedByUsers> {
                                               Get.to(() => OtherUserProfile(
                                                         userId:
                                                             usersList[index].id,
-                                                        user: usersList[index],
                                                       ))!
                                                   .then(
                                                       (value) => {loadData()});

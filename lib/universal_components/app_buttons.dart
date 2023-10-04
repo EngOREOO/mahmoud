@@ -96,7 +96,7 @@ class AppThemeBorderButton extends StatelessWidget {
     )
         .borderWithRadius(
             value: 1,
-            radius: 0,
+            radius: 10,
             color: borderColor ?? AppColorConstants.dividerColor)
         .ripple(onPress!);
   }

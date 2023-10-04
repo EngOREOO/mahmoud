@@ -25,7 +25,10 @@ import '../screens/dashboard/posts.dart';
 import '../screens/home_feed/comments_screen.dart';
 import '../screens/home_feed/post_media_full_screen.dart';
 import '../screens/live/gifts_list.dart';
+import '../screens/post/edit_post.dart';
+import '../screens/post/liked_by_users.dart';
 import '../screens/post/received_gifts.dart';
+import '../screens/post/view_post_insight.dart';
 import '../screens/profile/my_profile.dart';
 import '../screens/profile/other_user_profile.dart';
 
@@ -134,15 +137,13 @@ class PostCard extends StatefulWidget {
 
   final VoidCallback removePostHandler;
   final VoidCallback blockUserHandler;
-  final VoidCallback viewInsightHandler;
 
-  const PostCard(
-      {Key? key,
-      required this.model,
-      required this.removePostHandler,
-      required this.blockUserHandler,
-      required this.viewInsightHandler})
-      : super(key: key);
+  const PostCard({
+    Key? key,
+    required this.model,
+    required this.removePostHandler,
+    required this.blockUserHandler,
+  }) : super(key: key);
 
   @override
   PostCardState createState() => PostCardState();
@@ -219,7 +220,7 @@ class PostCardState extends State<PostCard> {
                         viewInsightsString.tr,
                         weight: TextWeight.semiBold,
                       ).p16.ripple(() {
-                        widget.viewInsightHandler();
+                        Get.to(() => ViewPostInsights(post: widget.model));
                       }),
                     )
                 ],
@@ -262,7 +263,7 @@ class PostCardState extends State<PostCard> {
       const SizedBox(
         height: 16,
       ),
-      buildMessageTextField(),
+      if (widget.model.commentsEnabled) buildMessageTextField(),
     ]).vP16;
   }
 
@@ -275,7 +276,8 @@ class PostCardState extends State<PostCard> {
         //   size: 15,
         // ),
         // const SizedBox(width: 5),
-        BodyExtraSmallText(widget.model.postTime.tr, weight: TextWeight.regular),
+        BodyExtraSmallText(widget.model.postTime.tr,
+            weight: TextWeight.regular),
       ],
     );
   }
@@ -291,7 +293,7 @@ class PostCardState extends State<PostCard> {
           // const SizedBox(
           //   width: 5,
           // ),
-          widget.model.totalComment > 0
+          widget.model.totalComment > 0 && widget.model.commentsEnabled
               ? BodyMediumText(
                   '$viewString ${widget.model.totalComment} $commentsString',
                   weight: TextWeight.semiBold,
@@ -363,30 +365,13 @@ class PostCardState extends State<PostCard> {
             ? BodyLargeText(
                 '${widget.model.totalLike}',
                 weight: TextWeight.bold,
-              )
+              ).ripple(() {
+                Get.to(() => LikedByUsers(
+                      postId: widget.model.id,
+                    ));
+              })
             : Container();
       }),
-      // const SizedBox(
-      //   width: 40,
-      // ),
-      // InkWell(
-      //     onTap: () => openComments(),
-      //     child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      //       ThemeIconWidget(
-      //         ThemeIcon.message,
-      //         color: AppColorConstants.iconColor,
-      //       ),
-      //       const SizedBox(
-      //         width: 5,
-      //       ),
-      //       widget.model.totalComment > 0
-      //           ? BodyLargeText('${widget.model.totalComment}',
-      //                   weight: TextWeight.bold)
-      //               .ripple(() {
-      //               openComments();
-      //             })
-      //           : Container(),
-      //     ])),
       const SizedBox(
         width: 40,
       ),
@@ -430,7 +415,10 @@ class PostCardState extends State<PostCard> {
   Widget buildMessageTextField() {
     return Container(
       height: 50.0,
-      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      margin: EdgeInsets.only(
+          left: DesignConstants.horizontalPadding,
+          right: DesignConstants.horizontalPadding,
+          bottom: 10),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -592,12 +580,32 @@ class PostCardState extends State<PostCard> {
         SizedBox(
           height: 20,
           width: 20,
+          child: Obx(() => ThemeIconWidget(
+                postCardController.savedPosts.contains(widget.model) ||
+                        widget.model.isSaved
+                    ? ThemeIcon.bookMarked
+                    : ThemeIcon.bookMark,
+                color: widget.model.isSaved ||
+                        postCardController.savedPosts.contains(widget.model)
+                    ? AppColorConstants.themeColor
+                    : AppColorConstants.iconColor,
+                size: 25,
+              )),
+        ).ripple(() {
+          postCardController.saveUnSavePost(post: widget.model);
+        }),
+        const SizedBox(
+          width: 20,
+        ),
+        SizedBox(
+          height: 20,
+          width: 20,
           child: ThemeIconWidget(
             ThemeIcon.more,
             color: AppColorConstants.iconColor,
-            size: 15,
+            size: 25,
           ),
-        ).borderWithRadius(value: 1, radius: 15).ripple(() {
+        ).ripple(() {
           openActionPopup();
         })
       ],
@@ -686,6 +694,16 @@ class PostCardState extends State<PostCard> {
       child: widget.model.user.isMe
           ? Wrap(
               children: [
+                ListTile(
+                    title: Center(
+                        child: Heading6Text(
+                      editPostString.tr,
+                      weight: TextWeight.semiBold,
+                    )),
+                    onTap: () async {
+                      Get.back();
+                      Get.to(() => EditPostScreen(post: widget.model));
+                    }),
                 ListTile(
                     title: Center(
                         child: Heading6Text(

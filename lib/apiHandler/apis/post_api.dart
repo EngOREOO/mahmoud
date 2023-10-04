@@ -8,6 +8,7 @@ import '../../helper/localization_strings.dart';
 import '../../model/api_meta_data.dart';
 import '../../model/comment_model.dart';
 import '../../model/post_model.dart';
+import '../../model/user_model.dart';
 import '../api_wrapper.dart';
 
 class PostApi {
@@ -15,6 +16,7 @@ class PostApi {
       {required PostType postType,
       required String title,
       required List<Map<String, String>> gallery,
+      required bool allowComments,
       String? hashTag,
       String? mentions,
       int? competitionId,
@@ -40,7 +42,8 @@ class PostApi {
       'audio_id': audioId,
       'audio_start_time': audioStartTime,
       'audio_end_time': audioEndTime,
-      'is_add_to_post': addToPost == true ? 1 : 0
+      'is_add_to_post': addToPost == true ? 1 : 0,
+      'is_comment_enable': allowComments == true ? 1 : 0
     };
 
     ApiWrapper().postApi(url: url, param: parameters).then((result) {
@@ -52,6 +55,20 @@ class PostApi {
     });
   }
 
+  static updatePost(
+      {required int postId,
+        required String title,
+        required bool allowComments}) async {
+    var url = '${NetworkConstantsUtil.editPost}$postId';
+
+    var parameters = {
+      "title": title,
+      'is_comment_enable': allowComments == true ? 1 : 0
+    };
+
+    await ApiWrapper().putApi(url: url, param: parameters).then((result) {});
+  }
+
   static getPosts(
       {int? userId,
       int? isPopular,
@@ -61,6 +78,8 @@ class PostApi {
       int? isReel,
       int? audioId,
       int? isMine,
+      int? isSaved,
+      int? isVideo,
       int? isRecent,
       String? title,
       String? hashtag,
@@ -100,6 +119,12 @@ class PostApi {
     }
     if (audioId != null) {
       url = '$url&audio_id=$audioId';
+    }
+    if (isSaved != null) {
+      url = '$url&is_favorite=1';
+    }
+    if (isVideo != null) {
+      url = '$url&is_video_post=1';
     }
     url = '$url&page=$page';
     EasyLoading.show(status: loadingString.tr);
@@ -243,6 +268,37 @@ class PostApi {
 
     ApiWrapper().postApi(
         url: url, param: {"post_id": postId.toString()}).then((value) {});
+  }
+
+  static Future<void> postLikedByUsers(
+      {required int postId,
+        required int page,
+        required Function(List<UserModel>, APIMetaData) resultCallback}) async {
+    var url = NetworkConstantsUtil.postLikedByUsers
+        .replaceAll('{{post_id}}', postId.toString());
+
+    url = '$url&page=$page';
+
+    await ApiWrapper().getApi(url: url).then((response) {
+      if (response?.success == true) {
+        var items = response!.data['results']['items'];
+        resultCallback(
+            List<UserModel>.from(
+                items.map((x) => UserModel.fromJson(x['user']))),
+            APIMetaData.fromJson(response.data['results']['_meta']));
+      }
+    });
+  }
+
+  static saveUnSavePost({required bool save, required int postId}) async {
+    var url = (save
+        ? NetworkConstantsUtil.savePost
+        : NetworkConstantsUtil.removeSavedPost);
+
+    await ApiWrapper().postApi(url: url, param: {
+      "reference_id": postId.toString(),
+      'type': '3'
+    }).then((value) {});
   }
 
   static Future uploadFile(String filePath,

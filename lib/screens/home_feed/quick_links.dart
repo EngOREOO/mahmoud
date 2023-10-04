@@ -55,6 +55,7 @@ class _QuickLinkWidgetState extends State<QuickLinkWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print('_homeController.quickLinks ${_homeController.quickLinks.length}');
     return Obx(() => GridView(
             padding: EdgeInsets.only(
                 left: DesignConstants.horizontalPadding,

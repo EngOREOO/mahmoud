@@ -737,7 +737,7 @@ class _ChatRoomDetailState extends State<ChatRoomDetail> {
                       member.userDetail, widget.chatRoom);
                 } else if (item.id == '4') {
                   _chatRoomDetailController.removeUserFormGroup(
-                      member.userDetail, widget.chatRoom);
+                      user:member.userDetail, chatRoom:widget.chatRoom);
                 }
               },
             ));

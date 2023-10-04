@@ -4,14 +4,14 @@ import 'package:foap/helper/imports/common_import.dart';
 import 'package:foap/screens/chat/group/public_group_detail.dart';
 import '../../../components/chat_history_tile.dart';
 
-class OpenGroupListing extends StatelessWidget {
+class PublicChatGroupListing extends StatelessWidget {
   final ChatHistoryController _chatHistoryController = Get.find();
   final ChatRoomDetailController _chatRoomDetailController = Get.find();
   final UserProfileManager _userProfileManager = Get.find();
 
   final ScrollController _controller = ScrollController();
 
-  OpenGroupListing({Key? key}) : super(key: key);
+  PublicChatGroupListing({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

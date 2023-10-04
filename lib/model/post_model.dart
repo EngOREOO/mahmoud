@@ -17,6 +17,7 @@ class PostModel {
   int isWinning = 0;
   bool isLike = false;
   bool isReported = false;
+  bool isSaved = false;
 
   List<PostGallery> gallery = [];
   List<String> tags = [];
@@ -26,6 +27,7 @@ class PostModel {
 
   String postTime = '';
   DateTime? createDate;
+  bool commentsEnabled = true;
 
   PostModel();
 
@@ -49,6 +51,8 @@ class PostModel {
 
     model.isLike = json['is_like'] == 1;
     model.isReported = json['is_reported'] == 1;
+    model.commentsEnabled = json['is_comment_enable'] == 1;
+    model.isSaved = json['isFavorite'] == 1;
 
     // model.imageUrl = json['imageUrl'];
     model.tags = [];

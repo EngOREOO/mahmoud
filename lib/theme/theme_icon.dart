@@ -15,14 +15,13 @@ enum ThemeIcon {
   // cameraFront,
   // cameraRear,
   cameraSwitch,
-
   videoCameraOff,
   videoCamera,
-
   emptyCheckbox,
   selectedCheckbox,
   search,
   downArrow,
+  arrowUp,
   star,
   filledStar,
   checkMark,
@@ -74,6 +73,7 @@ enum ThemeIcon {
   name,
   showPwd,
   notification,
+  language,
   discount,
   share,
   addressType,
@@ -93,10 +93,8 @@ enum ThemeIcon {
   location,
   drawing,
   fullScreen,
-
   play,
   stop,
-
   videoPost,
   delete,
   message,
@@ -104,7 +102,6 @@ enum ThemeIcon {
   chatBordered,
   randomChat,
   closeCircle,
-
   bed,
   map,
   news,
@@ -115,11 +112,9 @@ enum ThemeIcon {
   fwd,
   reply,
   bookMark,
+  bookMarked,
   lock,
-
   selectionType,
-
-
   report,
   hide,
   addCircle,
@@ -177,6 +172,12 @@ class ThemeIconWidget extends StatelessWidget {
         return Icon(
           Icons.keyboard_arrow_down,
           size: size ?? 20,
+          color: color ?? AppColorConstants.iconColor,
+        );
+      case ThemeIcon.arrowUp:
+        return SvgPicture.asset(
+          'assets/svg/outline/Arrow - Up 2.svg',
+          height: size ?? 20,
           color: color ?? AppColorConstants.iconColor,
         );
       case ThemeIcon.star:
@@ -357,7 +358,7 @@ class ThemeIconWidget extends StatelessWidget {
         );
       case ThemeIcon.more:
         return Icon(
-          Icons.more_horiz,
+          Icons.more_vert,
           size: size ?? 20,
           color: color ?? AppColorConstants.iconColor,
         );
@@ -441,7 +442,12 @@ class ThemeIconWidget extends StatelessWidget {
           size: size ?? 20,
           color: color ?? AppColorConstants.iconColor,
         );
-
+      case ThemeIcon.language:
+        return Icon(
+          Icons.language,
+          size: size ?? 20,
+          color: color ?? AppColorConstants.iconColor,
+        );
       case ThemeIcon.discount:
         return Icon(
           Icons.local_offer_outlined,
@@ -594,6 +600,12 @@ class ThemeIconWidget extends StatelessWidget {
       case ThemeIcon.bookMark:
         return Icon(
           Icons.bookmark_border_outlined,
+          size: size ?? 20,
+          color: color ?? AppColorConstants.iconColor,
+        );
+      case ThemeIcon.bookMarked:
+        return Icon(
+          Icons.bookmark,
           size: size ?? 20,
           color: color ?? AppColorConstants.iconColor,
         );

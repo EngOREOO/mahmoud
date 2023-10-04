@@ -8,6 +8,7 @@ import '../model/call_model.dart';
 import '../model/club_join_request.dart';
 import '../model/club_member_model.dart';
 import '../model/gift_model.dart';
+import '../model/story_model.dart';
 import '../screens/profile/other_user_profile.dart';
 import '../screens/profile/update_profile.dart';
 import '../screens/settings_menu/settings_controller.dart';
@@ -821,6 +822,31 @@ class ClubJoinRequestTile extends StatelessWidget {
                     })),
           ],
         ),
+      ],
+    );
+  }
+}
+
+class StoryViewerTile extends StatelessWidget {
+  final StoryViewerModel viewer;
+
+  const StoryViewerTile({
+    Key? key,
+    required this.viewer,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(child: UserInfo(model: viewer.user!)),
+        BodyMediumText(
+          viewer.viewedAt,
+          maxLines: 1,
+          color: AppColorConstants.grayscale600,
+        )
+        // const Spacer(),
       ],
     );
   }

@@ -7,6 +7,7 @@ import '../../components/post_card.dart';
 import '../../controllers/post/add_post_controller.dart';
 import '../../controllers/live/agora_live_controller.dart';
 import '../../controllers/home/home_controller.dart';
+import '../../controllers/post/select_media.dart';
 import '../../model/call_model.dart';
 import '../../model/post_model.dart';
 import '../../segmentAndMenu/horizontal_menu.dart';
@@ -120,6 +121,22 @@ class HomeFeedState extends State<HomeFeedScreen> {
                     ],
                   ),
                   const Spacer(),
+                  const ThemeIconWidget(
+                    ThemeIcon.plus,
+                    size: 25,
+                  ).ripple(() {
+                    Future.delayed(
+                      Duration.zero,
+                      () => showGeneralDialog(
+                          context: context,
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const SelectMedia()),
+                    );
+                  }),
+                  const SizedBox(
+                    width: 20,
+                  ),
                   const ThemeIconWidget(
                     ThemeIcon.notification,
                     size: 25,
@@ -276,14 +293,11 @@ class HomeFeedState extends State<HomeFeedScreen> {
                               ]),
                           _homeController.isRefreshingPosts.value == true
                               ? SizedBox(
-                                  height:
-                                      Get.height * 0.9,
+                                  height: Get.height * 0.9,
                                   child: const HomeScreenShimmer())
                               : _homeController.posts.isEmpty
                                   ? SizedBox(
-                                      height:
-                                          Get.height *
-                                              0.5,
+                                      height: Get.height * 0.5,
                                       child: emptyPost(
                                           title: noPostFoundString.tr,
                                           subTitle:
@@ -298,9 +312,6 @@ class HomeFeedState extends State<HomeFeedScreen> {
 
                   return PostCard(
                     model: model,
-                    viewInsightHandler: () {
-                      Get.to(() => ViewPostInsights(post: model));
-                    },
                     removePostHandler: () {
                       _homeController.removePostFromList(model);
                     },
@@ -336,7 +347,7 @@ class HomeFeedState extends State<HomeFeedScreen> {
         return Container(
           color: AppColorConstants.cardColor,
           child: FlutterPolls(
-            pollId: _homeController.polls[pollIndex].pollId.toString(),
+            pollId: _homeController.polls[pollIndex].id.toString(),
             hasVoted: _homeController.polls[pollIndex].isVote! > 0,
             userVotedOptionId: _homeController.polls[pollIndex].isVote! > 0
                 ? _homeController.polls[pollIndex].isVote
@@ -344,9 +355,7 @@ class HomeFeedState extends State<HomeFeedScreen> {
             onVoted: (PollOption pollOption, int newTotalVotes) async {
               await Future.delayed(const Duration(seconds: 1));
               _homeController.postPollAnswer(
-                  _homeController.polls[pollIndex].pollId!,
-                  _homeController.polls[pollIndex].id!,
-                  pollOption.id!);
+                  _homeController.polls[pollIndex].id!, pollOption.id!);
 
               /// If HTTP status is success, return true else false
               return true;
@@ -372,7 +381,7 @@ class HomeFeedState extends State<HomeFeedScreen> {
               ),
             ),
             pollOptions: List<PollOption>.from(
-              (_homeController.polls[pollIndex].pollQuestionOption ?? []).map(
+              (_homeController.polls[pollIndex].pollOptions ?? []).map(
                 (option) {
                   var a = PollOption(
                     id: option.id,

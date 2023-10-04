@@ -81,15 +81,15 @@ class ClubDetailState extends State<ClubDetail> {
                     color: Colors.white,
                   ),
                 ).circular.ripple(() {
-            Future.delayed(
-              Duration.zero,
-                  () =>
-                  showGeneralDialog(
-                      context: context,
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          SelectMedia(
-                            clubId: _clubDetailController.club.value!.id!,)
-                  ),);
+                  Future.delayed(
+                    Duration.zero,
+                    () => showGeneralDialog(
+                        context: context,
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            SelectMedia(
+                              clubId: _clubDetailController.club.value!.id!,
+                            )),
+                  );
                 })
               : null,
       body: Stack(
@@ -164,13 +164,6 @@ class ClubDetailState extends State<ClubDetail> {
                               blockUserHandler: () {
                                 // _homeController.removeUsersAllPostFromList(model);
                               },
-                              viewInsightHandler: () {
-                                Get.to(() => ViewPostInsights(
-                                    post: _clubDetailController.posts[index]));
-                              },
-                              // mediaTapHandler: (post){
-                              //   Get.to(()=> PostMediaFullScreen(post: post));
-                              // },
                             );
                           },
                           separatorBuilder: (BuildContext context, index) {
@@ -205,7 +198,6 @@ class ClubDetailState extends State<ClubDetail> {
                             ? Icons.exit_to_app
                             : Icons.add,
                         color: AppColorConstants.iconColor,
-
                         size: 15,
                       ),
                       const SizedBox(
@@ -242,7 +234,7 @@ class ClubDetailState extends State<ClubDetail> {
                   color: AppColorConstants.themeColor.withOpacity(0.2),
                   child: Row(
                     children: [
-                       Icon(
+                      Icon(
                         Icons.chat,
                         size: 15,
                         color: AppColorConstants.iconColor,
@@ -387,19 +379,12 @@ class ClubDetailState extends State<ClubDetail> {
 
                 return PostCard(
                   model: model,
-
                   removePostHandler: () {
                     _clubDetailController.removePostFromList(model);
                   },
                   blockUserHandler: () {
                     _clubDetailController.removePostFromList(model);
                   },
-                  viewInsightHandler: () {
-                    Get.to(() => ViewPostInsights(post: model));
-                  },
-                  // mediaTapHandler: (post){
-                  //   Get.to(()=> PostMediaFullScreen(post: post));
-                  // },
                 );
               },
               separatorBuilder: (context, index) {

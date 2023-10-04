@@ -1,7 +1,7 @@
 import 'package:foap/helper/imports/models.dart';
+import 'package:foap/helper/imports/common_import.dart';
 import 'package:foap/screens/post/tag_hashtag_view.dart';
 import 'package:foap/screens/post/tag_users_view.dart';
-import 'package:foap/helper/imports/common_import.dart';
 import '../../controllers/post/add_post_controller.dart';
 
 class EditPostScreen extends StatefulWidget {

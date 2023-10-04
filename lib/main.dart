@@ -121,8 +121,11 @@ Future<void> main() async {
   setupServiceLocator();
 
   final UserProfileManager userProfileManager = Get.find();
+  String? authKey = await SharedPrefs().getAuthorizationKey();
 
-  await userProfileManager.refreshProfile();
+  if (authKey != null) {
+    await userProfileManager.refreshProfile();
+  }
 
   final SettingsController settingsController = Get.find();
   await settingsController.getSettings();
